@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class Pyre(object):
 
-    def __init__(self, name=None, ctx=None, *args, **kwargs):
+    def __init__(self, name=None, ctx=None, interface=None, *args, **kwargs):
         """Constructor, creates a new Zyre node. Note that until you start the
         node it is silent and invisible to other nodes on the network.
         The node name is provided to other nodes during discovery. If you
@@ -42,7 +42,7 @@ class Pyre(object):
         self.inbox, self._outbox = zhelper.zcreate_pipe(self._ctx)
 
         # Start node engine and wait for it to be ready
-        self.actor = ZActor(self._ctx, PyreNode, self._outbox)
+        self.actor = ZActor(self._ctx, PyreNode, self._outbox, interface=interface)
         # Send name, if any, to node backend
         if (self._name):
             self.actor.send_unicode("SET NAME", zmq.SNDMORE)
