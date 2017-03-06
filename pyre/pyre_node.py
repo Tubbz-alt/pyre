@@ -191,16 +191,19 @@ class PyreNode(object):
                 self.peers[peer_id].send(msg)
         elif command == "SHOUT":
             # Get group to send message to
-            grpname = request.pop(0).decode('UTF-8')
-            msg = ZreMsg(ZreMsg.SHOUT)
-            msg.set_group(grpname)
-            msg.content = request.pop(0)
+            try:
+                grpname = request.pop(0).decode('UTF-8')
+                msg = ZreMsg(ZreMsg.SHOUT)
+                msg.set_group(grpname)
+                msg.content = request.pop(0)
 
-            if self.peer_groups.get(grpname):
-                self.peer_groups[grpname].send(msg)
+                if self.peer_groups.get(grpname):
+                    self.peer_groups[grpname].send(msg)
 
-            else:
-                logger.warning("Group {0} not found.".format(grpname))
+                else:
+                    logger.warning("Group {0} not found.".format(grpname))
+            except:
+                logger.warning("Shout message decode error.")
 
         elif command == "JOIN":
             grpname = request.pop(0).decode('UTF-8')
